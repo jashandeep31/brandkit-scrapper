@@ -1,11 +1,30 @@
-import { color } from "bun";
-import { chromium, type Page } from "playwright";
-
-console.log(`Firing up the brandkit scrapper :)`);
-const server = Bun.serve({
+import { chromium } from "playwright";
+import { getBrandKit } from "./ai/get-brand-kit";
+import { z } from "zod";
+const RANDOM_NUMBER = Math.floor(Math.random() * 100);
+const RequestSchema = z.object({
+  url: z.string(),
+});
+Bun.serve({
   port: 8002,
-  routes: {
-    "/": () => new Response("Bun!"),
+  async fetch(req) {
+    const url = new URL(req.url);
+    const method = req.method;
+    if (url.pathname === "/") {
+      return new Response(
+        JSON.stringify({ message: `Welcome ${RANDOM_NUMBER}` }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    if (method === "POST" && url.pathname === "/getbrand-kit") {
+      const body = await req.json();
+      const parsedSchema = RequestSchema.parse(body);
+      return new Response(JSON.stringify({ parsedSchema }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    return new Response("Not found", { status: 404 });
   },
 });
 
@@ -31,6 +50,6 @@ const scrapBrandKit = async () => {
   });
   await browser.close();
 };
-
-scrapBrandKit();
-console.log(`Listening on ${server.url}`);
+const image = Bun.file("secondary.png");
+// scrapBrandKit();
+await getBrandKit(image);
