@@ -1,6 +1,5 @@
-import { createPartFromUri, Type, type ContentListUnion } from "@google/genai";
+import { createPartFromUri, Type } from "@google/genai";
 import { ai } from ".";
-
 export const getBrandKit = async (image: File | Blob) => {
   const uploaded = await ai.files.upload({
     file: image,
@@ -20,11 +19,9 @@ export const getBrandKit = async (image: File | Blob) => {
       role: "user",
       parts: [
         {
-          text: `
-Extract a brand kit from this website screenshot.
+          text: `Extract a brand kit from this website screenshot.
 Return ONLY valid JSON with:
-primaryColors, secondaryColors, fontStyles, designTone, brandPersonality, uiStyle
-          `,
+primaryColors, secondaryColors, fontStyles, designTone, brandPersonality, uiStyle`,
         },
         createPartFromUri(processed.uri!, processed.mimeType!),
       ],
