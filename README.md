@@ -1,5 +1,7 @@
 # brandkit-scrapper
 
+## This is deprecated version internally project is moved to new architecture this is just a experiment 
+
 To install dependencies:
 
 ```bash
